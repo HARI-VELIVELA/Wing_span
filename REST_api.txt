@@ -1,0 +1,56 @@
+const Pool = require('pg').Pool
+const pool = new Pool({
+  user: 'me',
+  host: 'localhost',
+  database: 'myDatabase',
+  password: 'myPassword',
+  port: 5432,
+})
+# getting the bird name by searching it's name: send as name as request
+const getBirdName = (request, response) => {
+  pool.query('SELECT * FROM table WHERE Contains(Bird_name, "request");', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getBird_Power = (request, response) => {
+  const id = parseInt(request.params.id)
+
+  pool.query('SELECT power from birds where Bird_name = 'request'', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getWingSpan = (request, response) => {
+
+  pool.query('select WingspanCM from Birds where Bird_name = "request"',(error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(`User added with ID: ${result.insertId}`)
+  })
+}
+
+
+const getHabitat = (request, response) => {
+  
+  pool.query('select a.bird_name, b.habitat from Birds a inner join habitats b on a.Bird_id=b.Bird_id group by b.habitat' (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).send(`User deleted with ID: ${id}`)
+  })
+}
+
+module.exports = {
+  getBirdName,
+  getBird_Power,
+  getWingSpan,
+  getHabitat
+}

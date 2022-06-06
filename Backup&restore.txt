@@ -1,0 +1,53 @@
+Here, I am doing table backup and restore in two ways:
+
+Method 1: if we don't want to preserve the old information( because backup will contain up-to-date information only)
+ 
+   DROP TABLE oper.birds_bkp;
+   CREATE TABLE oper.birds_bkp select * from oper.birds;
+   CREATE DATABASE backup;
+   DROP TABLE backup.birds;
+   CREATE TABLE backup.birds select * from oper.birds_bkp;
+
+Method 2: (back up will contain both previous data and updated data as well with timestamp)
+setting up postgres-specific envronment variables:
+export PGHOST=localhostn # the servers where postgres is running on
+export PGPORT=XXXX # the port postgres listening on
+export PGDATABASE=mydatabase # the database which you want backup
+export PGUSER=myusername
+export PGPASSWORD=mypassword
+
+Back-up:
+#!/bin/bash
+# Backs up mydatabase to a file.
+export PGHOST=localhost
+export PGPORT=XXXX #5432
+export PGDATABASE=mydatabase
+export PGUSER=myusername
+export PGPASSWORD=mypassword
+TIME=$(date "+%s")
+BACKUP_FILE="postgres_${PGDATABASE}_${TIME}.pgdump"
+echo "Backing up $PGDATABASE to $BACKUP_FILE"
+pg_dump --format=custom > $BACKUP_FILE
+echo "Backup completed"
+
+Restore:
+
+if you need to create the database again, 
+   sudo -u postgres psql <<-EOF
+    CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD';
+    CREATE DATABASE $PGDATABASE WITH OWNER $PGUSER;
+   EOF
+
+type 1: rolling back to the existing database: (need to get the previous state - old state)
+  Note: here  --clean flag will delete all new changes and restore back it to the preovious state.
+  BACKUP_FILE=postgres_mydatabase_1591255548.pgdump
+  pg_restore --clean --dbname $PGDATABASE $BACKUP_FILE
+
+type 2: completly destroy and recreate the database
+  Note: --no-owner flag is used to ignore the any database-user related inforamation.
+  sudo -u postgres psql -c "DROP DATABASE $PGDATABASE"
+  sudo -u postgres psql -c "CREATE DATABASE $PGDATABASE"
+  BACKUP_FILE=postgres_mydatabase_1591255548.pgdump
+  pg_restore --no-owner --dbname $PGDATABASE $BACKUP_FILE
+ 
+

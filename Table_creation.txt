@@ -1,0 +1,72 @@
+CREATE TABLE "Assets" (
+  "Card_Id" Integer(PK),
+  "Bird_Id" Integer(PK),
+  "File_name" text,
+  "File_size" Integer,
+  "Encrypt_code" text,
+  "Length" Integer,
+  "Width" Integer
+);
+
+CREATE TABLE "Birds" (
+  "Bird_Id" Integer(PK),
+  "Bird_name" text,
+  "Scinetific_name" text,
+  "Action" text,
+  "Fact" text,
+  "victory_points" Integer,
+  "Egg_limit" Integer,
+  "Wing_span" Integer,
+  "Power" text
+);
+
+CREATE TABLE "Foods" (
+  "Bird_id" Integer(PK),
+  "Food_ld" Intteger(PK),
+  "Food_Type" text,
+  CONSTRAINT "FK_Foods.Bird_id"
+    FOREIGN KEY ("Bird_id")
+      REFERENCES "Birds"("Bird_name")
+);
+
+CREATE TABLE "Habitats" (
+  "Bird_id" Integer(PK),
+  "Habitat_ld" Intteger(PK),
+  "Habittat_Type" text,
+  CONSTRAINT "FK_Habitats.Bird_id"
+    FOREIGN KEY ("Bird_id")
+      REFERENCES "Birds"("Action")
+);
+
+CREATE TABLE "Users" (
+  "User_Id" Integer(PK),
+  "First_name" text,
+  "Last_name" text
+);
+
+CREATE TABLE "Summary_scores" (
+  "User_Id" Integer(PK),
+  "Game_id" Integer,
+  "total_score" Integer,
+  CONSTRAINT "FK_Summary_scores.User_Id"
+    FOREIGN KEY ("User_Id")
+      REFERENCES "Users"("User_Id")
+);
+
+CREATE TABLE "Detailed_scores" (
+  "Game_id" Integer(PK),
+  "User_id" Integer(PK),
+  "round_id" Integer(PK),
+  "victory_points" Integer,
+  "bonus_points" Integer,
+  "goal_points" Integer,
+  "egg_points" Integer,
+  "food_on_card_pt" Integer,
+  "tucked_card_pts" Integer,
+  "round_score" Integer,
+  "Board_side" Integer,
+  CONSTRAINT "FK_Detailed_scores.bonus_points"
+    FOREIGN KEY ("bonus_points")
+      REFERENCES "Users"("First_name")
+);
+
