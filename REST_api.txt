@@ -33,7 +33,7 @@ const getWingSpan = (request, response) => {
     if (error) {
       throw error
     }
-    response.status(201).send(`User added with ID: ${result.insertId}`)
+    response.status(200).json(results.rows)
   })
 }
 
@@ -44,7 +44,7 @@ const getHabitat = (request, response) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`User deleted with ID: ${id}`)
+    response.status(200).json(results.rows)
   })
 }
 
